@@ -5,7 +5,7 @@
 - Create a pull request ( subbranch(forked repo) -> main branch(main repo) ). 
 
 
-following illustration :
+This procedure can be best illustrated with the image below:
 
 ![this is image](https://github.com/alisharifi2000/CS-SBU-MachineLearning-BSc-2022/blob/main/assets/images/mermaid-diagram-20220220115738.png)
 
