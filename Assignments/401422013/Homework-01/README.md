@@ -36,3 +36,7 @@ Algorithm Multiply(a, b):
 T(n) = 3T(n/2) + O(n^log2(3))
 <br />
 T(n) = O(n^log2(3))
+
+
+<hr />
+برای اجرای تست میتوانید از دستور `python -m unittest test.py` در ترمینال استفاده نمایید.
