@@ -37,7 +37,7 @@ XY = z2*10^n + (z1 -z2 – z0)*10^(n/2) + z0
 ```python
 multiplyxy(x,y):
   if len(str(x)) == 1 or len(str(y)) == 1:
-    return x\*y
+    return x*y
 
   else:
     m = max(len(str(x)),len(str(y)))
