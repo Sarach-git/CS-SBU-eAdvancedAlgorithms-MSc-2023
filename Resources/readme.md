@@ -1,4 +1,4 @@
-## Main Text Book
+## Text Book
 * [Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest and Clifford Stein Introduction to Algorithms, Fourth Edition ISBN 9780262046305 Published: April 5, 2022.](https://www.amazon.com/Introduction-Algorithms-3rd-MIT-Press/dp/0262033844)
 
 ## Recommended Resources
