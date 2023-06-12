@@ -128,7 +128,7 @@ import pandas as pd
 
 INF = float('inf')
 
-def floyd_warshall(n, dist):
+def MinDist(n, dist):
     for k in range(n):
         for i in range(n):
             for j in range(n):
@@ -142,17 +142,12 @@ for _ in range(m):
     u, v, w = map(int, input().split())
     dist[u-1][v-1] = dist[v-1][u-1] = 2 ** w
 
-distances = floyd_warshall(n, dist)
+distances = MinDist(n, dist)
 total_dist = 0
 for i in range(n):
     for j in range(i + 1, n):
         total_dist += distances[i][j]
-
-output = pd.DataFrame({
-    'Total Distance': [total_dist, "{0:b}".format(total_dist)]
-}, index=['Decimal', 'Binary'])
-
-print(output)
+print("{0:b}".format(total_dist))
 ```
 
 ---
