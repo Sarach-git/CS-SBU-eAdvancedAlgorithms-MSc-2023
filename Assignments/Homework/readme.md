@@ -16,3 +16,4 @@ You must write your solutions by yourself, in your own words.
 | ----------- | ----------- | ----------- | ----------- |
 | Homework 1     | Divide and Conquer   | 5 Esfand 1401   | 15 Esfand 1401  |
 | Homework 2     | Dynamic Programming, Greedy algorithms, MST   | 24 Ordibehesht 1402   | 19 Khordad 1402  |
+| Project    | Optimization   | 26 Khordad 1402   | 4 Tir 1402  |
