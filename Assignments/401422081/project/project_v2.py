@@ -16,15 +16,15 @@ nutrient = pandas.read_csv('/home/mahsaa/Desktop/CS-SBU-eAdvancedAlgorithms-MSc-
 ingredients = pandas.read_csv('/home/mahsaa/Desktop/CS-SBU-eAdvancedAlgorithms-MSc-2023/Assignments/401422081/project/input_food.csv') #fdc_id, fdc_of_input_food
 #nutrient ids -> 1003 protein, 1004 fat, 1005 carbo
 totalCalories = 0
-for i in range(0,100):
+for i in range(0,1000):
     foodId = foods.iloc[i]['fdc_id']
     foodDescription = foods.iloc[i]['description']
     nutrientRows = nutrient.query(f'fdc_id == {foodId}')
     calories = 0
-    calories += nutrientRows.query(f'nutrient_id == 1003') * 4
-    calories += nutrientRows.query(f'nutrient_id == 1004') * 9
-    calories += nutrientRows.query(f'nutrient_id == 1005') * 4
-    print(f'foodId: {foodId} - desc: {foodDescription} - calory: {nutrientRows}')
+    calories += 0 if nutrientRows.query(f'nutrient_id == 1003')['amount'].size == 0 else nutrientRows.query(f'nutrient_id == 1003')['amount'].values[0] * 4
+    calories += 0 if nutrientRows.query(f'nutrient_id == 1004')['amount'].size == 0 else nutrientRows.query(f'nutrient_id == 1004')['amount'].values[0] * 9
+    calories += 0 if nutrientRows.query(f'nutrient_id == 1005')['amount'].size == 0 else nutrientRows.query(f'nutrient_id == 1005')['amount'].values[0] * 4
+    print(f'foodId: {foodId} - desc: {foodDescription} - calory: {calories}')
     
 
 # for i in range(0,100):
