@@ -16,7 +16,9 @@ nutrient = pandas.read_csv('/home/mahsaa/Desktop/CS-SBU-eAdvancedAlgorithms-MSc-
 ingredients = pandas.read_csv('/home/mahsaa/Desktop/CS-SBU-eAdvancedAlgorithms-MSc-2023/Assignments/401422081/project/input_food.csv') #fdc_id, fdc_of_input_food
 #nutrient ids -> 1003 protein, 1004 fat, 1005 carbo
 totalCalories = 0
-for i in range(0,1000):
+
+cleanedData = []
+for i in range(0,int(len(foods)/10)):
     foodId = foods.iloc[i]['fdc_id']
     foodDescription = foods.iloc[i]['description']
     nutrientRows = nutrient.query(f'fdc_id == {foodId}')
@@ -24,16 +26,26 @@ for i in range(0,1000):
     calories += 0 if nutrientRows.query(f'nutrient_id == 1003')['amount'].size == 0 else nutrientRows.query(f'nutrient_id == 1003')['amount'].values[0] * 4
     calories += 0 if nutrientRows.query(f'nutrient_id == 1004')['amount'].size == 0 else nutrientRows.query(f'nutrient_id == 1004')['amount'].values[0] * 9
     calories += 0 if nutrientRows.query(f'nutrient_id == 1005')['amount'].size == 0 else nutrientRows.query(f'nutrient_id == 1005')['amount'].values[0] * 4
-    print(f'foodId: {foodId} - desc: {foodDescription} - calory: {calories}')
+    # print(f'foodId: {foodId} - desc: {foodDescription} - calory: {calories}')
+    if(calories != 0):
+        cleanedData.append({'fdc_id': foodId, 'title':foodDescription, 'calories': calories})
+
+print(len(cleanedData))
     
 
-# for i in range(0,100):
-    # print(df.iloc[i]['Calories'])
-    # totalCalories += foods.iloc[i]['Calories']
-    # x.append(LpVariable(str( foods.iloc[i]['ID']), range(1), cat=LpBinary))
-    # xCoefficients.append(foods.iloc[i]['Calories'])
-# problem += lpSum(x[i] * xCoefficients[i] for i in range(0, len(x)))
-# print("Total calories: ", totalCalories) 
-# print("Current Status: ", LpStatus[problem.status]) 
-# problem.solve()
-# print("Objective: ", value(problem.objective))
+for i in range(0,len(cleanedData)):
+    x.append(LpVariable(name= str(cleanedData[i]['fdc_id']), upBound=1, lowBound=0, cat=LpInteger))
+    xCoefficients.append(cleanedData[i]['calories'])
+
+problem += lpSum(x[i] * xCoefficients[i] for i in range(0, len(x)))
+problem += lpSum(x[i] * xCoefficients[i] for i in range(0, len(x))) <= 2000
+# problem += (lpSum(x.values()) <= 2000, 'calories_condition')
+
+problem.solve()
+print("Current Status: ", LpStatus[problem.status]) 
+print("Problem: ", problem)
+print("Objective: ", problem.objective)
+
+for v in problem.variables():
+    if(v.varValue == 1):
+        print(f'{v.name}')
