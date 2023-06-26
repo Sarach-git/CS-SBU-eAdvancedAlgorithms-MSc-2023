@@ -1,8 +1,21 @@
 # Import all classes of PuLP module
 from pulp import *
 import pulp as pl
+import warnings
+warnings.simplefilter(action='ignore')
 import pandas
 
+userGender = 'm' #input('Are you male(m) or female(f)?')
+userWeight = 80 #float(input('Please input your weight:'))
+userActivity = '2' #input('Please input your daily activity from 1(office job or studying) to 3(labor or professional athlete)?')
+userBodyFatPercentFactor = 0.95 #Average due to inability to measure
+leanFactor = 0.9 #Average for the sake of simplicity
+userGenderFactor = float(0.9 if userGender == 'f' else 1)
+userActivityFactor = float(1.3 if userActivity == '1' else 1.65 if userActivity == '2' else 2)
+userBMR = userWeight * userGenderFactor * 24 * userBodyFatPercentFactor 
+userDailyCaloriesNeeded = userBMR * userActivityFactor
+print(f'Your (Approximate) BMR is {userBMR} and you need {userDailyCaloriesNeeded} calories daily')
+print(f'These are some foods you can take for today:')
 
 problem = LpProblem('Diet Problem', LpMaximize)
 
@@ -38,14 +51,16 @@ for i in range(0,len(cleanedData)):
     xCoefficients.append(cleanedData[i]['calories'])
 
 problem += lpSum(x[i] * xCoefficients[i] for i in range(0, len(x)))
-problem += lpSum(x[i] * xCoefficients[i] for i in range(0, len(x))) <= 2000
+problem += lpSum(x[i] * xCoefficients[i] for i in range(0, len(x))) <= userDailyCaloriesNeeded
 # problem += (lpSum(x.values()) <= 2000, 'calories_condition')
 
 problem.solve()
-print("Current Status: ", LpStatus[problem.status]) 
-print("Problem: ", problem)
-print("Objective: ", problem.objective)
+# print("Current Status: ", LpStatus[problem.status]) 
+# print("Problem: ", problem)
+# print("Objective: ", problem.objective)
 
 for v in problem.variables():
     if(v.varValue == 1):
-        print(f'{v.name}')
+        # print(f'{v.name}')
+        food = foods.query(f'fdc_id == {v.name}')
+        print(food['description'].values)
