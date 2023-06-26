@@ -1,0 +1,6 @@
+django==4.2.2
+django-bootstrap-v5==1.0.11
+django-widget-tweaks==1.4.12
+pandas==2.0.3
+pulp==2.7.0
+jupyter==1.0.0
