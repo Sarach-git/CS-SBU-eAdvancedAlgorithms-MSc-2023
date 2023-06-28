@@ -1,37 +1,53 @@
 # Import all classes of PuLP module
 from pulp import *
 import pulp as pl
+import warnings
+warnings.simplefilter(action='ignore')
 import pandas
 
+userGender = 'm' #input('Are you male(m) or female(f)?')
+userWeight = 80 #float(input('Please input your weight:'))
+userActivity = '2' #input('Please input your daily activity from 1(office job or studying) to 3(labor or professional athlete)?')
+userBodyFatPercentFactor = 0.95 #Average due to inability to measure
+leanFactor = 0.9 #Average for the sake of simplicity
+userGenderFactor = float(0.9 if userGender == 'f' else 1)
+userActivityFactor = float(1.3 if userActivity == '1' else 1.65 if userActivity == '2' else 2)
+userBMR = userWeight * userGenderFactor * 24 * userBodyFatPercentFactor 
+userDailyCaloriesNeeded = userBMR * userActivityFactor
+print(f'Your (Approximate) BMR is {userBMR} and you need {userDailyCaloriesNeeded} calories daily')
+print(f'These are some foods you can take for today:')
 
 problem = LpProblem('Diet Problem', LpMaximize)
 
 x = [] #Initialize objective variables
 xCoefficients = []
-# A = LpVariable('Car A', lowBound=0 , cat=LpInteger)
-# B = LpVariable('Car B', lowBound=0 , cat=LpInteger)
-
-# #Objective Function
-# problem += 20000*A + 45000*B , 'Objective Function'
-# #Constraints
-# problem += 4*A + 5*B <= 30 , 'Designer Constraint'
-# problem += 3*A + 6*B <=30, 'Engineer Constraint'
-# problem += 2*A + 7*B <=30, 'Machine Constraint'
-
-
-# #Objective Function
-# problem += 20000*A + 45000*B , 'Objective Function'
 
 pandas.set_option('display.max_rows', None)
-df = pandas.read_csv('data.csv')
+foods = pandas.read_csv('./USDA.csv') #fdc_id, description, food_category_id 
 totalCalories = 0
-for i in range(0,100):
-    # print(df.iloc[i]['Calories'])
-    totalCalories += df.iloc[i]['Calories']
-    x.append(LpVariable(str( df.iloc[i]['ID']), range(1), cat=LpBinary))
-    xCoefficients.append(df.iloc[i]['Calories'])
+
+cleanedData = []
+for i in range(0,int(len(foods)/10)):
+    foodId = foods.iloc[i]['ID']
+    foodDescription = foods.iloc[i]['Description']
+    calories = foods.iloc[i]['Calories']
+    if(calories != 0):
+        cleanedData.append({'ID': foodId, 'Description':foodDescription, 'Calories': calories})
+
+print(len(cleanedData))
+    
+
+for i in range(0,len(cleanedData)):
+    x.append(LpVariable(name= str(cleanedData[i]['ID']), upBound=1, lowBound=0, cat=LpInteger))
+    xCoefficients.append(cleanedData[i]['Calories'])
+
 problem += lpSum(x[i] * xCoefficients[i] for i in range(0, len(x)))
-print("Total calories: ", totalCalories) 
-print("Current Status: ", LpStatus[problem.status]) 
+problem += lpSum(x[i] * xCoefficients[i] for i in range(0, len(x))) <= userDailyCaloriesNeeded
+
 problem.solve()
-print("Objective: ", value(problem.objective))
+
+for v in problem.variables():
+    if(v.varValue == 1):
+        # print(f'{v.name}')
+        food = foods.query(f'ID == {v.name}')
+        print(str(food['Description'].values) + '  ' + str(food['Calories'].values))
