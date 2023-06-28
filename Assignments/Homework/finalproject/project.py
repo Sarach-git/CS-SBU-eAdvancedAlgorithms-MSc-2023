@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-@author: persian
+@author:niloofarvafa
 """
 
 #pip install -U git+https://github.com/coin-or/pulp
