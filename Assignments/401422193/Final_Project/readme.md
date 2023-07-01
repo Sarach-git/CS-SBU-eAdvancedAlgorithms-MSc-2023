@@ -16,6 +16,7 @@ A diet plan specifies the types and amounts of food to eat over a set period of 
 * Increase energy levels - Nutritious foods fuel the body and improve physical and mental performance.
 
 ## Project Phases
+**[Video Tutoria of program usage](https://github.com/moligarch/CS-SBU-eAdvancedAlgorithms-MSc-2023/blob/401422193/Assignments/401422193/Final_Project/ODP%20Tutorial-Persian.rar)**
 
 This project aims to optimize diet plans with the following 4 phases:
 
