@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+    {% load widget_tweaks %}
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <style>
+        body {
+            background: radial-gradient(
+                    circle at 30% 107%,
+                    #fdf497 0%,
+                    #fdf497 5%,
+                    #fd5949 45%,
+                    #d6249f 60%,
+                    #285AEB 90%
+            ) fixed;
+        }
+
+        /* Hide number input arrows: Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Hide number input arrows: Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+<body>
+<div class="container align-middle my-5">
+    <div class="row">
+        <div class="col-sm-8 mx-auto">
+            <div class="card">
+                <h5 class="card-header text-center">{{ title }}</h5>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        {% for field in form %}
+                        <div class="form-group mb-3 row">
+                            <label for="{{ field.auto_id }}" class="col-sm-2 col-form-label">
+                                {{ field.label }}
+                            </label>
+                            <div class="col-sm-10">
+                                {% if field.errors %}
+                                {{ field|add_class:"is-invalid" }}
+                                {% else %}
+                                {{ field }}
+                                {% endif %}
+                                {% if field.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in field.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <div class="d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-primary">Generate Optimized Diet</button>
+                        </div>
+                    </form>
+
+                    {% if diet != None %}
+                    <hr>
+                    <table class="table table-borderless">
+                        <tbody>
+                        {% for key, val in diet.numbers.items %}
+                        <tr>
+                            <th scope="row">{{ key }}</th>
+                            <td>{{ val|floatformat:0 }}</td>
+                        </tr>
+                        {% endfor %}
+                        {% for key, val in diet.ranges.items %}
+                        <tr>
+                            <th scope="row">{{ key }}</th>
+                            <td>{{ val.0.0|floatformat:1 }} - {{ val.0.1|floatformat:1 }} {{ val.1 }}</td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <th scope="row">LP Status</th>
+                            <td>
+                                {{ diet.diet.status }}
+                            </td>
+                        </tr>
+
+                        {% if diet.diet.status == "Optimal" %}
+                        <tr>
+                            <th scope="row">Recommended Diet</th>
+                            <td>
+                                {%for item in diet.diet.nutritional_items %}
+                                <b>{{ item.name }}:</b>
+                                {{ item.value }}
+                                <br>
+                                {% endfor %}
+                                <br>
+                                {%for meal in diet.diet.meals %}
+                                <b>{{ meal.name }}</b>
+                                <br>
+                                {{ meal.value|join:"<br>" }}
+                                <br>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        {% endif %}
+
+                        </tbody>
+                    </table>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
